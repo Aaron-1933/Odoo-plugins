@@ -678,17 +678,17 @@ class Product(models.Model):
                     inv_lvl = ShopifyGraphQLAPI.Inventory.find(inventory_item_id = "gid://shopify/InventoryItem/"+variant.shopify_inventory_id)
                     
                     location_id = ""
-                    if inv_lvl['tracked']:                
-                        if inv_lvl["inventoryLevels"]['edges']: 
-                            for data in inv_lvl["inventoryLevels"]['edges']:
-                                if data['node']['location']['id'] == first_location:
-                                    inventoryItem_gid = inv_lvl['id']
-                                    inventoryLevel_gid = data['node']['id']
-                                    location_id = data['node']['location']['id']
-                                    
-                                    for quantity in data['node']['quantities']:
-                                        quantity_list[quantity['name']] = quantity['quantity']                           
-                        
+                   if inv_lvl['tracked']:                
+                    if inv_lvl["inventoryLevels"]['edges']: 
+                        for data in inv_lvl["inventoryLevels"]['edges']:
+                            _logger.info("\n\n Location from Shopify: %s \n First location: %s \n\n" % (data['node']['location']['id'], first_location))
+                            if data['node']['location']['id'] == first_location:
+                                inventoryItem_gid = inv_lvl['id']
+                                inventoryLevel_gid = data['node']['id']
+                                location_id = data['node']['location']['id']
+
+                                for quantity in data['node']['quantities']:
+                                    quantity_list[quantity['name']] = quantity['quantity']                 
                         if location_id:
                             new_data = {
                                         'product_variant': variant,
