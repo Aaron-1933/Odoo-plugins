@@ -3,6 +3,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+      ARG CACHEBUST: "2"
     depends_on:
       - db
     environment:
