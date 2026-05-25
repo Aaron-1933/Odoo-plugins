@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-      ARG CACHEBUST: "2"
+        CACHEBUST: "2"
     depends_on:
       - db
     environment:
