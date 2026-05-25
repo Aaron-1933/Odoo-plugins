@@ -898,7 +898,7 @@ class Product(models.Model):
             for quantity in (inventory_levels_data.get('quantities') or []):
                 quantity_list[quantity['name']] = quantity['quantity']
 
-            location_id = inventory_levels_data["location"]["id"]
+            location_id = inventory_levels_data.get("location", {}).get("id")
 
             if product and product not in product_ids_list:
                 stock_inventory_line = {
