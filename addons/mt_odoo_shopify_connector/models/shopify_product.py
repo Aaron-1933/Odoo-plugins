@@ -679,33 +679,33 @@ class Product(models.Model):
                     
                     location_id = ""
                     _logger.info("\n\n inv_lvl tracked: %s \n\n" % inv_lvl.get('tracked'))
-                   if inv_lvl['tracked']:
-                    _logger.info("\n\n inv_lvl inventoryLevels: %s \n\n" % inv_lvl["inventoryLevels"])                
-                    if inv_lvl["inventoryLevels"]['edges']: 
-                        for data in inv_lvl["inventoryLevels"]['edges']:
-                            _logger.info("\n\n Location from Shopify: %s \n First location: %s \n\n" % (data['node']['location']['id'], first_location))
-                            if data['node']['location']['id'] == first_location:
-                                inventoryItem_gid = inv_lvl['id']
-                                inventoryLevel_gid = data['node']['id']
-                                location_id = data['node']['location']['id']
+                    if inv_lvl['tracked']:
+                        _logger.info("\n\n inv_lvl inventoryLevels: %s \n\n" % inv_lvl["inventoryLevels"])                
+                        if inv_lvl["inventoryLevels"]['edges']: 
+                            for data in inv_lvl["inventoryLevels"]['edges']:
+                                _logger.info("\n\n Location from Shopify: %s \n First location: %s \n\n" % (data['node']['location']['id'], first_location))
+                                if data['node']['location']['id'] == first_location:
+                                    inventoryItem_gid = inv_lvl['id']
+                                    inventoryLevel_gid = data['node']['id']
+                                    location_id = data['node']['location']['id']
 
-                                for quantity in data['node']['quantities']:
-                                    quantity_list[quantity['name']] = quantity['quantity']                 
-                        if location_id:
-                            new_data = {
-                                        'product_variant': variant,
-                                        'qty_available': variant.qty_available,}
-                            if inv_lvl:
-                                new_data.update({                     
-                                        'inventory_level_id':inventoryLevel_gid,
-                                        'inventory_item_id':inventoryItem_gid,
-                                        'available': quantity_list["available"],
-                                        'on_hand': quantity_list["on_hand"],
-                                        'location_id': location_id })
-                            yield new_data
-                        else:
-                            _logger.info("\n\n\nLocation not found!!! -- %s \n\n" % inv_lvl["variant"].get('id',''))
-                            yield {"error" :  "location_not_found"}
+                                    for quantity in data['node']['quantities']:
+                                        quantity_list[quantity['name']] = quantity['quantity']                 
+                            if location_id:
+                                new_data = {
+                                            'product_variant': variant,
+                                            'qty_available': variant.qty_available,}
+                                if inv_lvl:
+                                    new_data.update({                     
+                                            'inventory_level_id':inventoryLevel_gid,
+                                            'inventory_item_id':inventoryItem_gid,
+                                            'available': quantity_list["available"],
+                                            'on_hand': quantity_list["on_hand"],
+                                            'location_id': location_id })
+                                yield new_data
+                            else:
+                                _logger.info("\n\n\nLocation not found!!! -- %s \n\n" % inv_lvl["variant"].get('id',''))
+                                yield {"error" :  "location_not_found"}
                         
                     else :
                         _logger.info("\n\n\nTracking not enabled!!! -- %s \n\n" % inv_lvl["variant"].get('id',''))
