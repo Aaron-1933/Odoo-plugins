@@ -678,6 +678,7 @@ class Product(models.Model):
                     inv_lvl = ShopifyGraphQLAPI.Inventory.find(inventory_item_id = "gid://shopify/InventoryItem/"+variant.shopify_inventory_id)
                     
                     location_id = ""
+                    _logger.info("\n\n inv_lvl tracked: %s \n\n" % inv_lvl.get('tracked'))
                    if inv_lvl['tracked']:
                     _logger.info("\n\n inv_lvl inventoryLevels: %s \n\n" % inv_lvl["inventoryLevels"])                
                     if inv_lvl["inventoryLevels"]['edges']: 
