@@ -42,7 +42,7 @@ class Inventory:
                 inventoryItem(id: $InventoryItemId) {
                     id
                     tracked
-                    inventoryLevels(first: 1) {
+                    inventoryLevels(first: 20) {
                         edges {
                             node {
                                 id
