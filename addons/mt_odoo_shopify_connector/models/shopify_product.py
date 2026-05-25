@@ -895,7 +895,7 @@ class Product(models.Model):
 
             inventory_levels_data = level['inventoryLevel']
 
-            for quantity in inventory_levels_data['quantities']:
+            for quantity in (inventory_levels_data.get('quantities') or []):
                 quantity_list[quantity['name']] = quantity['quantity']
 
             location_id = inventory_levels_data["location"]["id"]
