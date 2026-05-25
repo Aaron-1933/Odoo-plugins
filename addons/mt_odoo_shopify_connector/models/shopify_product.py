@@ -893,7 +893,7 @@ class Product(models.Model):
             quantity_list = {"available": 0, "on_hand": 0, "reserved": 0, }
             product = self.env['product.product'].sudo().search([('shopify_inventory_id', '=', level['legacyResourceId'])], limit=1)
 
-            inventory_levels_data = level['inventoryLevel']
+            inventory_levels_data = level.get('inventoryLevel') or {}
 
             for quantity in (inventory_levels_data.get('quantities') or []):
                 quantity_list[quantity['name']] = quantity['quantity']
