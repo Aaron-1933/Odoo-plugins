@@ -229,18 +229,10 @@ class SaleOrder(models.Model):
                 
                 self.create_shopify_shipping_lines(so_obj.id, instance_id, order)
                 
-                if order.processed_at:
+                try:
                     so_obj.action_confirm()
-                    
-                    # if so_obj.shopify_fulfillment_status == 'fulfilled':            
-                    #     for picking in so_obj.picking_ids:
-                    #         # if picking.state in ['draft', 'assigned']:  # Pickings in draft or assigned state
-                    #         #     picking.action_confirm()  # Confirm the picking
-                    #         if picking.state == 'assigned':
-                    #             picking.with_context(skip_expired=True).button_validate()                                 
-                                               
-                    if create_invoice == True:
-                        so_obj._create_invoices()
+                except Exception as e:
+                    _logger.warning('No se pudo confirmar la orden Shopify %s: %s', order.id, e)
                         
                 # Update the order timestamp from Shopify to Odoo.
                 so_obj.write({"date_order" : dict_so['date_order']})
