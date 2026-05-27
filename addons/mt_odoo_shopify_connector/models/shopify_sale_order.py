@@ -670,13 +670,22 @@ class SaleOrder(models.Model):
         shopify.Fulfillment._prefix_source = ''
         data = {}       
 
-        fulfillment = shopify.Fulfillment()  
+        tracking_info = {"number": "", "url": "", "company": ""}
+        done_pickings = order.picking_ids.filtered(lambda p: p.state == 'done')
+        if done_pickings:
+            picking = done_pickings.sorted('id', reverse=True)[0]
+            tracking_info["number"] = picking.carrier_tracking_ref or ""
+            tracking_info["url"] = getattr(picking, 'carrier_tracking_url', '') or ""
+            if picking.carrier_id:
+                tracking_info["company"] = picking.carrier_id.name or ""
+
+        fulfillment = shopify.Fulfillment()
         data['line_items_by_fulfillment_order']  = fo_id_list
-        data['tracking_info'] = {"number": "", "url": "" }
+        data['tracking_info'] = tracking_info
 
         fulfillment.line_items_by_fulfillment_order = fo_id_list
         fulfillment.notify_customer = False
-        fulfillment.tracking_info = {"number": "", "url": "" }
+        fulfillment.tracking_info = tracking_info
         
         # res = fulfillment.create(data) #return fulfillment object
         res = fulfillment.save() #return true/false
