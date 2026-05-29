@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        ========== MENU PRINCIPAL ==========
+        El menu de primer nivel que aparece en la barra superior/lateral.
+        - id="menu_ventiapp_root": identificador unico.
+        - name: lo que se ve en pantalla.
+        - sequence: numero para ordenar entre otros menus principales
+          (mas bajo = mas a la izquierda).
+        - web_icon (opcional, lo dejamos sin para no complicar).
+    -->
+    <menuitem id="menu_ventiapp_root"
+              name="Ventiapp"
+              sequence="80"/>
+
+
+    <!--
+        ========== SUB-MENU ==========
+        Aparece bajo el menu principal "Ventiapp".
+
+        - parent: referencia al menu padre (el que acabamos de crear).
+        - action: cual action dispara al hacer click.
+          Como esta en el mismo modulo, usamos el id directo.
+    -->
+    <menuitem id="menu_ventiapp_webhook_logs"
+              name="Webhook Logs"
+              parent="menu_ventiapp_root"
+              action="action_ventiapp_webhook_log"
+              sequence="10"/>
+
+</odoo>

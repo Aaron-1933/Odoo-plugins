@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Todo XML de Odoo arranca con esa cabecera <?xml ... ?>.
+  El elemento raiz es <odoo> (en Odoo 17). Adentro van <record> y <menuitem>.
+-->
+<odoo>
+
+    <!--
+        ========== VISTA TIPO LISTA (TREE) ==========
+        Define como se ve la tabla cuando abres la lista de webhooks.
+
+        - model="ir.ui.view": le decimos a Odoo "esto es una vista".
+        - id="...": identificador unico. Convencion: <modelo>_view_<tipo>.
+        - <field name="name">: nombre humano de la vista.
+        - <field name="model">: el modelo Odoo al que aplica.
+        - <field name="arch" type="xml">: aqui va la estructura visual.
+            * <tree>: tipo de vista (lista/tabla).
+            * Los <field> adentro son las columnas.
+            * decoration-*: pintamos filas segun el valor de status (Odoo lo hace solo).
+    -->
+    <record id="ventiapp_webhook_log_view_tree" model="ir.ui.view">
+        <field name="name">ventiapp.webhook.log.tree</field>
+        <field name="model">ventiapp.webhook.log</field>
+        <field name="arch" type="xml">
+            <tree string="Webhook Logs"
+                  decoration-success="status == 'processed'"
+                  decoration-warning="status == 'pending'"
+                  decoration-danger="status == 'failed'">
+                <field name="received_at"/>
+                <field name="name"/>
+                <field name="event_type"/>
+                <field name="status"/>
+                <field name="processing_attempts"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <!--
+        ========== VISTA TIPO FORMULARIO ==========
+        Lo que se ve cuando haces click en un registro de la lista.
+
+        - <sheet>: el "papel" blanco central donde van los campos.
+        - <group>: agrupa campos en 2 columnas automaticamente.
+        - El <field name="payload"> esta fuera de un group con widget="ace"
+          para que se vea como un editor de codigo con resaltado JSON.
+          (Ace es el editor que ya viene con Odoo.)
+    -->
+    <record id="ventiapp_webhook_log_view_form" model="ir.ui.view">
+        <field name="name">ventiapp.webhook.log.form</field>
+        <field name="model">ventiapp.webhook.log</field>
+        <field name="arch" type="xml">
+            <form string="Webhook Log">
+                <sheet>
+                    <group>
+                        <group string="Identificacion">
+                            <field name="name"/>
+                            <field name="event_type"/>
+                            <field name="received_at"/>
+                        </group>
+                        <group string="Procesamiento">
+                            <field name="status"/>
+                            <field name="processing_attempts"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Payload (JSON)">
+                            <field name="payload" widget="ace" options="{'mode': 'json'}"/>
+                        </page>
+                        <page string="Error">
+                            <field name="error_message"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!--
+        ========== ACTION ==========
+        Esto le dice a Odoo: "cuando hagan click en el menu, abre la lista
+        de registros del modelo ventiapp.webhook.log".
+
+        - view_mode="tree,form": permite cambiar entre lista y formulario.
+        - El <field name="help"> es el mensaje que aparece cuando la lista esta vacia.
+    -->
+    <record id="action_ventiapp_webhook_log" model="ir.actions.act_window">
+        <field name="name">Webhook Logs</field>
+        <field name="res_model">ventiapp.webhook.log</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aun no se han recibido webhooks de Ventiapp.
+            </p>
+            <p>
+                Cuando Ventiapp empiece a mandar webhooks al endpoint
+                <b>/ventiapp/webhook</b>, apareceran aqui.
+            </p>
+        </field>
+    </record>
+
+</odoo>
